@@ -36,20 +36,30 @@ public class GeneratorRun {
 		BufferedWriter bw = null;
 		try {
 
-			String params = GeneratorRun.recentPhotoParameter(
-					"flickr.photos.getRecent",
-					"314859c708417e548a161f1385dd9990", "500", "1");
-			GeneratorRun generator = new GeneratorRun(params);
-			FlickrURLGenerator fug = new FlickrURLGenerator(
-					generator.getXmlString());
-			ArrayList<String> urls = fug.generateURL();
+			int per_page = 500;// Maximum per page
+			int pages = 5;
+			String export_filename =  "/tmp/photo_url.txt";
+		
+			File file = new File(export_filename);
+			bw = new BufferedWriter(new FileWriter(file, true)); // true mean append
+			
+			for (int i = 0; i < pages; i++) {
+				String params = GeneratorRun.recentPhotoParameter(
+						"flickr.photos.getRecent",
+						"314859c708417e548a161f1385dd9990", String.valueOf(per_page), String.valueOf(i));
+				GeneratorRun generator = new GeneratorRun(params);
+				FlickrURLGenerator fug = new FlickrURLGenerator(
+						generator.getXmlString());
 
-			File file = new File("/tmp/photo_url.txt");
-			bw = new BufferedWriter(new FileWriter(file));
-			for (String str : urls) {
-				bw.write(str);
-				bw.newLine();
+				ArrayList<String> urls = fug.generateURL();
+
+				for (String str : urls) {
+					bw.write(str);
+					bw.newLine();
+				}
+				System.out.println(i +" completed!");
 			}
+
 			bw.close();
 			System.out.println("Succeed!");
 		} catch (Exception e) {
