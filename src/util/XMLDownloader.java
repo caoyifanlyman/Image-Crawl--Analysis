@@ -17,7 +17,7 @@ public class XMLDownloader {
 		BufferedReader rd = null;
 		try {
 			// Create connection
-			url = new URL(targetURL+urlParameters);
+			url = new URL(targetURL + urlParameters);
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setUseCaches(false);
