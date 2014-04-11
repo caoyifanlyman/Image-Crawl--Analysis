@@ -27,16 +27,10 @@ public class GeneratorRun {
 	}
 
 	public static void main(String[] args) {
-		BufferedWriter bw = null;
 		Pattern pattern = Pattern.compile("/");
 		try {			
 			int per_page = 100;// Maximum per page
 			int pages = 5;
-			String export_filename =  "C:\\Users\\Jacky\\projects\\Image-Crawl-Analysis\\photo_url.txt";
-		
-			File file = new File(export_filename);
-			bw = new BufferedWriter(new FileWriter(file, true)); // true mean append
-			
 			for (int i = 1; i <= pages; i++) {
 				String params = GeneratorRun.generateParameter(
 						"flickr.photos.getRecent",
@@ -57,24 +51,15 @@ public class GeneratorRun {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					bw.write(str);
-					bw.newLine();
 				}
 				System.out.println(i +" completed!");
 			}
 
-			bw.close();
 			System.out.println("Succeed!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (bw != null) {
-					bw.close();
-				}
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
+
 		}
 	}
 }
