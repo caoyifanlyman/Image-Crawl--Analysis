@@ -5,11 +5,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import org.w3c.dom.Document;
 
 import util.FlickrURLGenerator;
+import util.ImageDownload;
 import util.XMLDownloader;
 
 public class GeneratorRun {
@@ -25,11 +28,11 @@ public class GeneratorRun {
 
 	public static void main(String[] args) {
 		BufferedWriter bw = null;
-		try {
-
-			int per_page = 10;// Maximum per page
+		Pattern pattern = Pattern.compile("/");
+		try {			
+			int per_page = 100;// Maximum per page
 			int pages = 5;
-			String export_filename =  "/tmp/photo_url.txt";
+			String export_filename =  "C:\\Users\\Jacky\\projects\\Image-Crawl-Analysis\\photo_url.txt";
 		
 			File file = new File(export_filename);
 			bw = new BufferedWriter(new FileWriter(file, true)); // true mean append
@@ -42,8 +45,18 @@ public class GeneratorRun {
 				// here use the two utils 
 				Document xmlDoc = XMLDownloader.excuteDownload(targetURL, params);
 				ArrayList<String> urls = FlickrURLGenerator.generateURL(xmlDoc);
-				
+				ImageDownload ImgDnLd = new ImageDownload();
 				for (String str : urls) {
+					try {
+						String[] imageName = pattern.split(str);
+						ImgDnLd.saveUrl(imageName[imageName.length-1], str);
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					bw.write(str);
 					bw.newLine();
 				}
