@@ -1,39 +1,24 @@
 package util;
 
-import java.io.StringReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class FlickrURLGenerator {
-	private Document doc;
 
-	public FlickrURLGenerator(String xml) throws Exception {
-		this.setDoc(loadXMLFromString(xml));
-	}
 
-	public Document getDoc() {
-		return doc;
-	}
+	public static ArrayList<String> generateURL(Document doc)
+			throws ParserConfigurationException, SAXException, IOException {
 
-	public void setDoc(Document doc) {
-		this.doc = doc;
-	}
-
-	public static Document loadXMLFromString(String xml) throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		InputSource is = new InputSource(new StringReader(xml));
-		return builder.parse(is);
-	}
-
-	public ArrayList<String> generateURL() {
 		ArrayList<String> res = new ArrayList<>();
 		NodeList nList = doc.getElementsByTagName("photo");
 		StringBuilder sb = new StringBuilder();

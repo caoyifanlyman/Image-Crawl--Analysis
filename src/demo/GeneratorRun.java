@@ -4,28 +4,19 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import org.w3c.dom.Document;
 
 import util.FlickrURLGenerator;
 import util.XMLDownloader;
 
 public class GeneratorRun {
-	private final String targetURL = "https://api.flickr.com/services/rest/";
-	private String xmlString = null;
+	private static final String targetURL = "https://api.flickr.com/services/rest/";
 
-	public GeneratorRun(String params) {
-		xmlString = XMLDownloader.excuteDownload(targetURL, params);
-	}
 
-	public String getXmlString() {
-		return xmlString;
-	}
-
-	public void setXmlString(String xmlString) {
-		this.xmlString = xmlString;
-	}
-
-	public static String recentPhotoParameter(String method, String api_key,
+	public static String generateParameter(String method, String api_key,
 			String per_page, String page) {
 
 		return "?method=" + method + "&api_key=" + api_key + "&per_page="
@@ -36,23 +27,22 @@ public class GeneratorRun {
 		BufferedWriter bw = null;
 		try {
 
-			int per_page = 500;// Maximum per page
+			int per_page = 10;// Maximum per page
 			int pages = 5;
 			String export_filename =  "/tmp/photo_url.txt";
 		
 			File file = new File(export_filename);
 			bw = new BufferedWriter(new FileWriter(file, true)); // true mean append
 			
-			for (int i = 0; i < pages; i++) {
-				String params = GeneratorRun.recentPhotoParameter(
+			for (int i = 1; i <= pages; i++) {
+				String params = GeneratorRun.generateParameter(
 						"flickr.photos.getRecent",
 						"314859c708417e548a161f1385dd9990", String.valueOf(per_page), String.valueOf(i));
-				GeneratorRun generator = new GeneratorRun(params);
-				FlickrURLGenerator fug = new FlickrURLGenerator(
-						generator.getXmlString());
-
-				ArrayList<String> urls = fug.generateURL();
-
+			
+				// here use the two utils 
+				Document xmlDoc = XMLDownloader.excuteDownload(targetURL, params);
+				ArrayList<String> urls = FlickrURLGenerator.generateURL(xmlDoc);
+				
 				for (String str : urls) {
 					bw.write(str);
 					bw.newLine();
