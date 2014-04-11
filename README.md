@@ -1,4 +1,5 @@
-flickrurlgenerator
+Image-Crawl-Analysis
 ==================
 
-A photo url generator for flickr.com
+Distributed Web Image Crawl and Analysis System
+
