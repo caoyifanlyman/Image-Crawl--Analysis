@@ -14,4 +14,9 @@
 hs_err_pid*
 /bin
 
+# images
 *.jpg
+*.jpeg
+
+# backup Files
+*~
